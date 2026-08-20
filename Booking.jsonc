@@ -1,0 +1,58 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "guest_name": {
+      "type": "string",
+      "title": "Guest Name",
+      "minLength": 2
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "title": "Email"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone"
+    },
+    "check_in": {
+      "type": "string",
+      "format": "date",
+      "title": "Check-In"
+    },
+    "check_out": {
+      "type": "string",
+      "format": "date",
+      "title": "Check-Out"
+    },
+    "guest_count": {
+      "type": "integer",
+      "title": "Guest Count",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "special_requests": {
+      "type": "string",
+      "title": "Special Requests"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "title": "Status"
+    }
+  },
+  "required": [
+    "guest_name",
+    "email",
+    "phone",
+    "check_in",
+    "check_out",
+    "guest_count"
+  ]
+}
