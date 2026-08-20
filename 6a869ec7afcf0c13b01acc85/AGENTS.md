@@ -34,3 +34,13 @@ npx skills add base44/skills
 - Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
 - Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
 - Run the relevant checks from `package.json` before finishing code changes.
+
+## Base44 sandbox notes
+
+- App lives in `6a869ec7afcf0c13b01acc85/`; run it with `docker compose -f ../docker-compose.base44.yml up -d` (Vite dev server, host port 3000 -> 5173).
+- The original export was flat (all files in one directory) and several files were truncated. Restored during setup:
+  - Directory tree rebuilt under `src/` (`pages`, `components`, `components/echo`, `components/ui`, `hooks`, `lib`, `api`, `utils`); entity/config jsonc moved to `base44/`.
+  - Recreated missing `vite.config.js` (with `@` alias, `allowedHosts: true`) and `tailwind.config.js` (fonts `heading`/`body`/`cta`, `gold` color).
+  - Completed truncated files: `src/index.css`, `src/pages/Home.jsx`, `src/components/ProtectedRoute.jsx`, `src/lib/authReturnTo.js`, `src/components/ui/drawer.jsx`, and rewrote `src/lib/AuthContext.jsx`.
+  - `src/pages/Command.jsx` was absent from the export and is a placeholder page.
+- `src/api/base44Client.js` is an offline stub (`db` returns empty data), so no external credentials are needed to run locally.

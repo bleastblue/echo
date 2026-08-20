@@ -24,3 +24,13 @@ export default function ProtectedRoute({ fallback = <DefaultFallback />, unauthe
 
   if (authError) {
     if (authError.type === 'user_not_registered') {
+      return <UserNotRegisteredError />;
+    }
+  }
+
+  if (!isAuthenticated) {
+    return unauthenticatedElement ?? null;
+  }
+
+  return <Outlet />;
+}
