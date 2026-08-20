@@ -24,3 +24,13 @@ export default function Home() {
         <Hero onBook={openBooking} />
         <About />
         <Amenities />
+        <Dining />
+        <Gallery />
+        <Location />
+      </main>
+      <Footer onBook={openBooking} />
+      <WhatsAppButton />
+      <ReservationModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
+    </div>
+  );
+}

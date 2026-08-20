@@ -1,36 +1,43 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
 # AGENTS.md
 
 ## Project Context
 
-This is a Base44 app repository. Treat it as user-owned application code, keep changes focused on the user's request, and preserve existing project conventions.
+Base44 app repository (Vite + React 18 + Tailwind + shadcn/ui). Marketing/booking site for
+"Echo Knuckles", a luxury villa in Sri Lanka. Keep changes focused and follow existing conventions.
 
-Start with `README.md` for local setup, environment variables, and publish workflow.
-
-## Base44 References
-
-- CLI overview: https://docs.db.com/developers/references/cli/get-started/overview.md
-- Agent skills: https://docs.db.com/developers/backend/overview/skills.md
-
-If your agent supports Agent Skills, install or update Base44 skills before Base44-specific work:
+## Run it
 
 ```bash
-npx skills add base44/skills
+docker compose -f docker-compose.base44.yml up -d   # Vite dev server on host port 3000
+docker compose -f docker-compose.base44.yml logs -f web
 ```
 
-## Key Files
+The compose service is `node:22` with the repo bind-mounted at `/app`; `npm install` runs at
+startup and `node_modules` lives in a named volume. HMR works; Vite is configured with
+`host: true`, `allowedHosts: true` and polling for bind mounts.
 
-- `src/`: frontend application source.
-- `src/api/base44Client.js`: frontend Base44 SDK client.
-- `vite.config.js`: Vite config and Base44 Vite plugin setup.
-- `.env.local`: local-only environment values; never commit secrets.
+## Non-obvious findings (import cleanup)
 
-## Working Notes
+This repo arrived as a **flat Base44 export**: every file sat at the repo root and several were
+truncated mid-file. Setup reconstructed the standard layout expected by the `@/*` alias
+(`src/pages`, `src/components`, `src/components/ui`, `src/components/echo`, `src/hooks`,
+`src/lib`, `src/api`) and re-added the missing `vite.config.js` and `tailwind.config.js`.
 
-- Use `base44 dev` as the default local development command when you need the local Base44 backend. It can run the backend and frontend together.
-- When docs or code mention the frontend being started automatically, that usually means the Base44 project config includes `site.serveCommand`, for example `"serveCommand": "npm run dev"` in `base44/config.jsonc`.
-- Use `npm run dev` only for frontend-only work against the hosted Base44 backend.
-- Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
-- Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
-- Run the relevant checks from `package.json` before finishing code changes.
+Other quirks worth knowing:
+
+- The export prepends a `const db = globalThis.__B44_DB__ || {...}` stub to files that use `db`
+  (and, harmlessly, to `AGENTS.md`/`CLAUDE.md`). `src/api/base44Client.js` is a **stub** too —
+  there is no live backend, so auth and entity calls resolve to empty results.
+- Files completed by hand because the export cut them off: `src/pages/Home.jsx`,
+  `src/components/ProtectedRoute.jsx`, `src/lib/AuthContext.jsx`, `src/lib/authReturnTo.js`,
+  `src/components/ui/drawer.jsx`, `src/index.css` (theme vars + `--ring`/`--radius`).
+- `src/App.jsx` imported `@/pages/Command`, which does not exist in the export; that route was
+  removed. Re-add the page if you need it.
+- Auth pages (`Login`, `Register`, `ForgotPassword`, `ResetPassword`, `OAuthConsent`) exist but
+  are not routed in `App.jsx` — only `/` is.
+- Custom Tailwind tokens live in `tailwind.config.js`: `font-heading` (Fraunces),
+  `font-body` (Inter), `font-cta` (Space Grotesk), `tracking-luxe`, `tracking-wide-caps`, `gold`.
+
+## Checks
+
+`npm run lint`, `npm run build`.

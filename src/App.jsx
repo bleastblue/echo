@@ -7,7 +7,6 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import Home from '@/pages/Home';
-import Command from '@/pages/Command';
 import ProtectedRoute from '@/components/ProtectedRoute';
 // Add page imports here
 
@@ -39,9 +38,6 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Add your page Route elements here */}
       <Route path="/" element={<Home />} />
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        <Route path="/command" element={<Command />} />
-      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

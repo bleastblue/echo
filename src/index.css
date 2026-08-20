@@ -24,3 +24,16 @@
     --destructive-foreground: 38 30% 93%;
     --border: 38 14% 81%;
     --input: 38 14% 81%;
+    --ring: 210 6% 17%;
+    --radius: 0.25rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+}
